@@ -8,13 +8,8 @@ class DemoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Innova System',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      initialRoute: AppRoutes.start,
-      routes: AppRoutes.routes,
+      initialRoute: AppRoutes.start, // Inicia en StartScreen
+      routes: AppRoutes.routes, // Usa las rutas definidas en routes.dart
     );
   }
 }

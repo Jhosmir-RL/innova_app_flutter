@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:app_innova/app.dart';
+import 'package:app_innova/firebase_options.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized(); // Asegura la correcta inicialización de Flutter
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const DemoApp());
 }

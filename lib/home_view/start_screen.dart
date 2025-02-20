@@ -12,24 +12,16 @@ class StartScreenState extends State<StartScreen> {
   @override
   void initState() {
     super.initState();
-    // Redirigir a HomeScreen después de 4 segundos
     Future.delayed(const Duration(seconds: 4), () {
-      Navigator.pushReplacementNamed(context, AppRoutes.home);
+      Navigator.pushReplacementNamed(context, AppRoutes.login); // Ahora redirige a LoginScreen
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFBA93CA), Color(0xFF936CAD)], // Gradiente de fondo
-          ),
-        ),
+      backgroundColor: Colors.purple,
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
@@ -43,7 +35,7 @@ class StartScreenState extends State<StartScreen> {
   }
 }
 
-// Widget para mostrar el logo centrado
+// Widget para el logo
 class _LogoWidget extends StatelessWidget {
   const _LogoWidget();
 

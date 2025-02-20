@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "217097347576",
+    "project_id": "app-innova-v2",
+    "storage_bucket": "app-innova-v2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217097347576:android:b3724527e9575c8eb3360d",
+        "android_client_info": {
+          "package_name": "com.login_app.signin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "217097347576-5qmg1cmf52ihmt233nct0pfl42t68icn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.login_app.signin",
+            "certificate_hash": "b3214eb9875bb6986a208d17faa6d465d698b3a4"
+          }
+        },
+        {
+          "client_id": "217097347576-r9lscfe17np5vlffmlh3m3r42fquvkgb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8q1fW-0jvH9oCzomjKttTy1Q-JpHVtpk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "217097347576-r9lscfe17np5vlffmlh3m3r42fquvkgb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
