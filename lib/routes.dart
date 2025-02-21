@@ -10,6 +10,7 @@ import 'package:app_innova/profile/edit_profile_screen.dart';
 import 'package:app_innova/location/location_screen.dart';
 import 'package:app_innova/contact/contact_screen.dart';
 import 'package:app_innova/settings/logout_confirmation_screen.dart';
+import 'package:app_innova/admin/admin_screen.dart'; // <-- 📌 IMPORTAR ADMIN SCREEN
 
 class AppRoutes {
   static const String start = "/";
@@ -23,6 +24,7 @@ class AppRoutes {
   static const String location = "/location";
   static const String contact = "/contact";
   static const String logoutConfirmation = "/logout";
+  static const String adminPanel = "/admin"; // <-- 📌 NUEVA RUTA
 
   static Map<String, WidgetBuilder> routes = {
     start: (context) => const StartScreen(),
@@ -36,5 +38,6 @@ class AppRoutes {
     location: (context) => const LocationScreen(),
     contact: (context) => const ContactScreen(),
     logoutConfirmation: (context) => const LogoutConfirmationScreen(),
+    adminPanel: (context) => const AdminScreen(), // <-- 📌 AÑADIDO
   };
 }

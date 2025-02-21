@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 import 'package:app_innova/routes.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -9,14 +12,35 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
+  String _role = "user"; // Por defecto, usuario normal
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  Future<String> _getFilePath() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return '${directory.path}/usuarios.json';
+  }
 
-    debugPrint("Navegando a índice: $index");
+  Future<void> _loadUserRole() async {
+    final path = await _getFilePath();
+    final file = File(path);
+    if (!file.existsSync()) return;
+
+    List<dynamic> users = json.decode(file.readAsStringSync());
+
+    // Obtener usuario logueado (En este caso, lo simulamos con "admin")
+    var loggedInUser = users.firstWhere((user) => user['username'] == "admin",
+        orElse: () => null);
+
+    if (loggedInUser != null) {
+      setState(() {
+        _role = loggedInUser['role'];
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserRole();
   }
 
   @override
@@ -24,8 +48,6 @@ class HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
         selectedItemColor: Colors.purple,
         unselectedItemColor: Colors.black54,
         items: const [
@@ -70,17 +92,34 @@ class HomeScreenState extends State<HomeScreen> {
                 iconColor: Colors.purple,
                 routeName: AppRoutes.location,
               ),
+              if (_role == "admin") // 🔥 Solo mostrar si el usuario es admin
+                MenuItem(
+                  title: "Administrar Usuarios",
+                  icon: Icons.admin_panel_settings,
+                  iconColor: Colors.blue,
+                  routeName: AppRoutes.adminPanel,
+                ),
               MenuItem(
                 title: "Cerrar sesión",
                 icon: Icons.logout,
                 iconColor: Colors.red,
-                routeName: AppRoutes.logoutConfirmation,
+                isLogout: true,
+                onLogout: () => _logout(context),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    final path = await _getFilePath();
+    final file = File(path);
+    if (file.existsSync()) {
+      await file.delete();
+    }
+    Navigator.pushReplacementNamed(context, AppRoutes.login);
   }
 }
 
@@ -121,22 +160,29 @@ class MenuItem extends StatelessWidget {
   final String title;
   final IconData icon;
   final Color iconColor;
-  final String routeName;
+  final String? routeName;
+  final bool isLogout;
+  final VoidCallback? onLogout;
 
   const MenuItem({
     super.key,
     required this.title,
     required this.icon,
     required this.iconColor,
-    required this.routeName,
+    this.routeName,
+    this.isLogout = false,
+    this.onLogout,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        debugPrint("Navegando a: $routeName");
-        Navigator.pushNamed(context, routeName);
+        if (isLogout && onLogout != null) {
+          onLogout!();
+        } else if (routeName != null) {
+          Navigator.pushNamed(context, routeName!);
+        }
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),

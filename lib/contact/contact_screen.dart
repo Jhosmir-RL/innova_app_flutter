@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ContactScreen extends StatelessWidget {
   const ContactScreen({super.key});
@@ -6,57 +7,98 @@ class ContactScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Contáctanos")),
-      body: const Padding(
-        padding: EdgeInsets.all(20.0),
+      appBar: AppBar(
+        title: const Align(
+          alignment: Alignment.centerLeft,
+          child: Text("Contáctanos", style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+        ),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _ContactHeader(),
-            SizedBox(height: 20),
-            _ContactInfo(),
-            SizedBox(height: 20),
-            _ContactActions(),
+            const _ContactHeader(),
+            const SizedBox(height: 25),
+            Card(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              elevation: 3,
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: _ContactInfo(),
+              ),
+            ),
+            const SizedBox(height: 25),
+            const _ContactActions(),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Inicio"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Perfil"),
+        ],
+        selectedItemColor: Colors.deepPurple,
+        unselectedItemColor: Colors.grey,
       ),
     );
   }
 }
 
-// Widget para el encabezado de la pantalla
+// Encabezado
 class _ContactHeader extends StatelessWidget {
   const _ContactHeader();
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      "Comunícate con nosotros",
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    return Column(
+      children: [
+        Icon(Icons.support_agent, size: 80, color: Colors.deepPurple),
+        const SizedBox(height: 10),
+        const Text(
+          "Comunícate con nosotros",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+        ),
+        const SizedBox(height: 5),
+        const Text(
+          "Estamos aquí para ayudarte. Contáctanos por cualquiera de nuestros canales.",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 14, color: Colors.grey),
+        ),
+      ],
     );
   }
 }
 
-// Widget para mostrar la información de contacto
+// Información de contacto
 class _ContactInfo extends StatelessWidget {
   const _ContactInfo();
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        const _InfoRow(icon: Icons.phone, text: "+51 987 654 321"),
-        const SizedBox(height: 10),
-        const _InfoRow(icon: Icons.email, text: "contacto@innovasystem.com"),
-        const SizedBox(height: 10),
-        const _InfoRow(icon: Icons.location_on, text: "Jr. Junín Mza. H Urb. Satipo (Nro. 283), Junín – Satipo"),
+      children: const [
+        _InfoRow(icon: Icons.phone, text: "+51 987 654 321"),
+        Divider(),
+        _InfoRow(icon: Icons.email, text: "contacto@innovasystem.com"),
+        Divider(),
+        _InfoRow(icon: Icons.location_on, text: "Jr. Junín Mza. H Urb. Satipo (Nro. 283), Junín – Satipo"),
       ],
     );
   }
 }
 
-// Widget para cada fila de información de contacto
+// Fila de información de contacto
 class _InfoRow extends StatelessWidget {
   final IconData icon;
   final String text;
@@ -67,8 +109,8 @@ class _InfoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, color: Colors.deepPurple),
-        const SizedBox(width: 10),
+        Icon(icon, color: Colors.deepPurple, size: 28),
+        const SizedBox(width: 12),
         Expanded(
           child: Text(
             text,
@@ -80,7 +122,7 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
-// Widget para los botones de acciones de contacto
+// Botones de contacto
 class _ContactActions extends StatelessWidget {
   const _ContactActions();
 
@@ -89,19 +131,27 @@ class _ContactActions extends StatelessWidget {
     return Column(
       children: [
         ElevatedButton.icon(
-          onPressed: () {
-            // Implementar acción de WhatsApp
-          },
-          icon: const Icon(Icons.chat),
+          onPressed: () {},
+          icon: const FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white),
           label: const Text("WhatsApp"),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
+            minimumSize: const Size(double.infinity, 50),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 15),
         ElevatedButton.icon(
-          onPressed: () {
-            // Implementar acción de llamada
-          },
-          icon: const Icon(Icons.call),
+          onPressed: () {},
+          icon: const Icon(Icons.call, color: Colors.white),
           label: const Text("Llamar"),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.white,
+            minimumSize: const Size(double.infinity, 50),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
         ),
       ],
     );

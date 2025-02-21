@@ -1,96 +1,112 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 import 'package:app_innova/routes.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+
+  @override
+  RegisterScreenState createState() => RegisterScreenState();
+}
+
+class RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+
+  Future<String> _getFilePath() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return '${directory.path}/usuarios.json';
+  }
+
+  Future<List<dynamic>> _loadUsers() async {
+    final path = await _getFilePath();
+    final file = File(path);
+    if (!file.existsSync()) return [];
+    return json.decode(file.readAsStringSync());
+  }
+
+  Future<void> _registerUser() async {
+    final String email = _emailController.text;
+    final String password = _passwordController.text;
+
+    if (!email.endsWith("@gmail.com")) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Solo se permiten correos @gmail.com')),
+      );
+      return;
+    }
+
+    if (email.isEmpty || password.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Complete todos los campos')),
+      );
+      return;
+    }
+
+    final List<dynamic> users = await _loadUsers();
+
+    if (users.any((user) => user['email'] == email)) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('El correo ya está registrado')),
+      );
+      return;
+    }
+
+    users.add({"email": email, "password": password});
+
+    final path = await _getFilePath();
+    File(path).writeAsStringSync(json.encode(users));
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Usuario registrado con éxito')),
+    );
+
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, AppRoutes.login);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text('Registro')),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const _RegisterHeader(),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(labelText: 'Correo (solo @gmail.com)'),
+            ),
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(
+                labelText: 'Contraseña',
+                suffixIcon: IconButton(
+                  icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+                  onPressed: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                ),
+              ),
+              obscureText: _obscurePassword,
+            ),
             const SizedBox(height: 20),
-            const _RegisterForm(),
-            const SizedBox(height: 20),
-            _RegisterActions(),
+            ElevatedButton(
+              onPressed: _registerUser,
+              child: const Text('Registrarse'),
+            ),
           ],
         ),
       ),
-    );
-  }
-}
-
-// Widget para el encabezado de la pantalla
-class _RegisterHeader extends StatelessWidget {
-  const _RegisterHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text(
-      "Registro de Usuario",
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-    );
-  }
-}
-
-// Widget para el formulario de registro
-class _RegisterForm extends StatelessWidget {
-  const _RegisterForm();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const TextField(decoration: InputDecoration(labelText: "Nombre")),
-        const SizedBox(height: 10),
-        const TextField(decoration: InputDecoration(labelText: "Apellidos")),
-        const SizedBox(height: 10),
-        const TextField(
-          decoration: InputDecoration(labelText: "Correo electrónico"),
-          keyboardType: TextInputType.emailAddress,
-        ),
-        const SizedBox(height: 10),
-        const TextField(
-          decoration: InputDecoration(labelText: "Teléfono"),
-          keyboardType: TextInputType.phone,
-        ),
-        const SizedBox(height: 10),
-        const TextField(decoration: InputDecoration(labelText: "Dirección")),
-        const SizedBox(height: 10),
-        const TextField(
-          decoration: InputDecoration(labelText: "Contraseña"),
-          obscureText: true,
-        ),
-      ],
-    );
-  }
-}
-
-// Widget para los botones de acciones de registro
-class _RegisterActions extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, AppRoutes.home);
-          },
-          child: const Text("Registrarse"),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, AppRoutes.login);
-          },
-          child: const Text("¿Ya tienes cuenta? Inicia sesión"),
-        ),
-      ],
     );
   }
 }
